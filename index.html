@@ -3,426 +3,383 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AFK Idle Hero | 掛機吧！勇者（單檔原型）</title>
+  <title>掛機吧！勇者 — 網頁版原型 v0.3</title>
   <style>
     :root{
-      --bg:#0b1220; --panel:#121a2b; --muted:#8aa0c6; --text:#e9f0ff; --accent:#6ec7ff; --accent2:#8bffb0; --danger:#ff6e86;
+      --bg:#0b1220; --panel:#121a2b; --muted:#8aa0c6; --text:#e9f0ff; --accent:#6ec7ff; --lime:#8bffb0; --danger:#ff6e86; --gold:#ffd37a;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans TC',sans-serif;background:linear-gradient(180deg,#0b1220,#0b1220 50%,#0e1527);color:var(--text)}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans TC',sans-serif;background:radial-gradient(1200px 600px at 50% -10%,#12203a,#0b1220 60%);color:var(--text)}
     header{position:sticky;top:0;background:#0b1220d0;backdrop-filter:saturate(140%) blur(6px);z-index:10;border-bottom:1px solid #1d2a45}
-    header .wrap{max-width:1100px;margin:auto;padding:10px 14px;display:flex;gap:12px;align-items:center}
-    .title{font-weight:800;letter-spacing:0.5px}
+    header .wrap{max-width:1120px;margin:auto;padding:10px 14px;display:flex;gap:12px;align-items:center}
     .pill{padding:4px 10px;border:1px solid #2b3b63;border-radius:999px;color:var(--muted);font-size:12px}
-    main{max-width:1100px;margin:auto;padding:16px}
-    .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr;}}
+    main{max-width:1120px;margin:auto;padding:16px}
     .card{background:var(--panel);border:1px solid #1d2a45;border-radius:14px;box-shadow:0 6px 24px #0006}
-    .card h3{margin:0 0 10px 0;font-size:16px;color:#bcd2ff}
-    .card .body{padding:14px}
-    .bar{height:14px;background:#0a1324;border:1px solid #1d2a45;border-radius:999px;overflow:hidden}
-    .bar>div{height:100%;background:linear-gradient(90deg,#67bfff,#8bffb0);width:0%;transition:width .25s ease}
+    .body{padding:14px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .col{display:flex;flex-direction:column;gap:6px}
-    button{background:#162446;border:1px solid #2b3b63;color:#cfe3ff;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .col{display:flex;flex-direction:column;gap:8px}
+    button{background:#162446;border:1px solid #2b3b63;color:#cfe3ff;padding:10px 12px;border-radius:10px;cursor:pointer}
     button:hover{filter:brightness(1.08)}
     .btn-acc{border-color:#3c7bff;background:#17305a}
     .btn-danger{border-color:#6b2b3c;background:#3a0f18;color:#ffd4db}
     .muted{color:var(--muted)}
-    .stat{display:grid;grid-template-columns:1fr auto;gap:6px;font-size:14px}
-    .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .kpi .box{padding:10px;border:1px solid #1d2a45;border-radius:12px;text-align:center;background:#0f1830}
-    .tabs{display:flex;gap:6px;flex-wrap:wrap}
-    .tabs button{padding:8px 12px}
-    .tabs button.active{outline:2px solid #3c7bff}
+    h1,h2,h3{margin:0 0 8px 0}
+    .center{display:flex;justify-content:center;align-items:center}
+    .menu-list{display:flex;flex-direction:column;gap:10px;width:min(520px,90vw)}
+    .menu-list button{width:100%;font-size:18px;padding:14px}
+    .hidden{display:none}
     table{width:100%;border-collapse:collapse}
     th,td{padding:8px 6px;border-bottom:1px solid #1d2a45;font-size:14px}
     th{color:#bcd2ff;text-align:left}
-    .rarity-Common{color:#cfe3ff}
-    .rarity-Uncommon{color:#8bffb0}
-    .rarity-Rare{color:#6ec7ff}
-    .rarity-Epic{color:#d9a7ff}
-    .rarity-Legendary{color:#ffd37a}
-    .footer{opacity:.7;font-size:12px;margin-top:8px}
-    .log{max-height:160px;overflow:auto;background:#0b1327;padding:8px;border-radius:10px;border:1px solid #1d2a45}
-    .right .body{display:flex;flex-direction:column;gap:10px}
-    .small{font-size:12px}
-    .danger{color:var(--danger)}
-    .success{color:var(--accent2)}
+    .panel{padding:14px;border:1px solid #1d2a45;border-radius:12px;background:#0f1830}
+    .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .kpi .box{padding:10px;border:1px solid #1d2a45;border-radius:12px;text-align:center;background:#0f1830}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
   <header>
     <div class="wrap">
-      <div class="title">🗡️ 掛機吧！勇者 — 原型</div>
-      <div class="pill" id="pill-stage">Stage 1</div>
+      <div style="font-weight:800;letter-spacing:.5px">🗡️ 掛機吧！勇者 — 原型 v0.3</div>
+      <div class="pill" id="pill-mode">主選單</div>
       <div class="pill" id="pill-gold">Gold 0</div>
-      <div class="pill" id="pill-relic">Relics 0</div>
       <div class="pill" id="pill-dps">DPS 0</div>
-      <div style="margin-left:auto" class="muted small">自動儲存中 • 單機版原型（LocalStorage）</div>
+      <div class="pill" id="pill-day">Day 0</div>
+      <div style="margin-left:auto" class="muted">LocalStorage • 單檔</div>
     </div>
   </header>
 
-  <main class="grid">
-    <section class="left card">
-      <div class="body">
-        <div class="kpi" style="margin-bottom:10px">
-          <div class="box"><div class="muted small">當前敵人</div><div id="kEnemy">Slime</div></div>
-          <div class="box"><div class="muted small">敵人血量</div><div id="kEnemyHP">0 / 0</div></div>
-          <div class="box"><div class="muted small">戰鬥狀態</div><div id="kStatus">前進中</div></div>
-        </div>
-        <div class="bar" title="Enemy HP"><div id="hpBar"></div></div>
-        <div class="row" style="margin-top:10px">
-          <button class="btn-acc" id="btnStart">▶ 開始 / 暫停</button>
-          <button id="btnFast">⏩ 加速 ×<span id="speedLabel">1</span></button>
-          <button id="btnNext">⏭ 下一關</button>
-          <button id="btnRetry">⟲ 重試Boss</button>
-        </div>
-        <div class="row" style="margin-top:12px;gap:14px">
-          <div class="col" style="min-width:240px;flex:1">
-            <h3>英雄屬性</h3>
-            <div class="stat"><div>等級</div><div id="sLevel">1</div></div>
-            <div class="stat"><div>攻擊力</div><div id="sATK">10</div></div>
-            <div class="stat"><div>暴擊率</div><div id="sCrit">5%</div></div>
-            <div class="stat"><div>暴擊傷害</div><div id="sCritDmg">200%</div></div>
-            <div class="stat"><div>攻速（次/秒）</div><div id="sAS">1.00</div></div>
-            <div class="stat"><div>遺物加成</div><div id="sRelic">0%</div></div>
-            <div class="stat"><div>實際DPS</div><div id="sDPS">0</div></div>
-            <div class="row" style="margin-top:8px">
-              <button id="btnBuyATK">升級攻擊 +1（<span id="costATK">10</span> 金幣）</button>
-              <button id="btnBuyCrit">升級暴擊率 +1%（<span id="costCrit">25</span> 金幣）</button>
-              <button id="btnBuyAS">升級攻速 +0.1（<span id="costAS">50</span> 金幣）</button>
-            </div>
-          </div>
-          <div class="col" style="min-width:260px;flex:1">
-            <h3>裝備（點選以裝備）</h3>
-            <table id="gearTable">
-              <thead><tr><th>部位</th><th>名稱</th><th>加成</th></tr></thead>
-              <tbody>
-                <tr><td>武器</td><td id="gear-weapon">無</td><td id="gear-weapon-bonus">—</td></tr>
-                <tr><td>護甲</td><td id="gear-armor">無</td><td id="gear-armor-bonus">—</td></tr>
-                <tr><td>飾品</td><td id="gear-trinket">無</td><td id="gear-trinket-bonus">—</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div style="margin-top:12px">
-          <h3>戰況紀錄</h3>
-          <div id="log" class="log small"></div>
-        </div>
+  <main>
+    <!-- Scene: Main Menu (圖1) -->
+    <section id="scene-menu" class="center" style="min-height:70vh;flex-direction:column;gap:14px">
+      <h1>掛機吧！勇者</h1>
+      <div class="menu-list">
+        <button id="btnStory">故事模式</button>
+        <button id="btnEndless">無盡模式（原掛機原型）</button>
+        <button id="btnAchv">成就（預留）</button>
+        <button id="btnSettings">設定</button>
+        <button id="btnCredits">製作人員</button>
       </div>
     </section>
 
-    <aside class="right card">
-      <div class="body">
-        <div class="tabs">
-          <button data-tab="inv" class="active">🎒 背包</button>
-          <button data-tab="upg">⬆️ 強化</button>
-          <button data-tab="prestige">🌀 轉生</button>
-          <button data-tab="opts">⚙️ 設定</button>
-        </div>
-        <div id="tab-inv" class="tab">
-          <div class="muted small" style="margin-top:4px">擊敗敵人有機率掉落裝備。點擊物品即可裝備到對應部位。</div>
-          <table id="invTable" style="margin-top:8px">
-            <thead><tr><th>名稱</th><th>部位</th><th>加成</th><th>稀有度</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div id="tab-upg" class="tab" style="display:none">
-          <h3>被動強化</h3>
-          <div class="row">
-            <button id="btnAtk10" class="btn-acc">一次升級攻擊 +10（<span id="costATK10">0</span>）</button>
-            <button id="btnAscSpd" title="提升戰鬥速度上限">解鎖更快加速 ×4（500 金幣）</button>
+    <!-- Scene: Slots (圖2) -->
+    <section id="scene-slots" class="hidden">
+      <h2>選擇存檔（故事模式）</h2>
+      <div id="slotList" class="grid"></div>
+      <div class="row" style="margin-top:10px"><button id="btnBackSlots">← 返回主選單</button></div>
+    </section>
+
+    <!-- Scene: Setup (圖3) -->
+    <section id="scene-setup" class="hidden">
+      <div class="grid">
+        <div class="card"><div class="body">
+          <h3>地區與難度</h3>
+          <div class="row"><select id="selRegion"></select><select id="selDiff">
+            <option value="Normal">普通</option><option value="Hard">困難</option><option value="Nightmare">惡夢</option></select></div>
+          <div class="panel small muted">難度影響：敵人生命/攻擊、掉落率與成就點倍率。</div>
+        </div></div>
+        <div class="card"><div class="body">
+          <h3>初始英雄（最多 5 位）</h3>
+          <div id="heroPick" class="row"></div>
+        </div></div>
+        <div class="card"><div class="body">
+          <h3>初始置物</h3>
+          <div id="startPerks" class="row"></div>
+          <div class="muted">成就點：<span id="achvPts">0</span></div>
+        </div></div>
+        <div class="card"><div class="body center" style="gap:10px">
+          <button id="btnBeginStory" class="btn-acc">冒險！</button>
+          <button id="btnBackSetup">返回</button>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- Scene: Town (圖4) -->
+    <section id="scene-town" class="hidden">
+      <div class="kpi" style="margin-bottom:10px">
+        <div class="box"><div class="muted small">位置</div><div id="kTownRegion">曙光之地</div></div>
+        <div class="box"><div class="muted small">第幾天</div><div id="kDay">1</div></div>
+        <div class="box"><div class="muted small">隊伍戰力</div><div id="kPower">0</div></div>
+        <div class="box"><div class="muted small">速度倍率上限</div><div id="kSpeedMax">×2</div></div>
+      </div>
+      <div class="grid">
+        <div class="card"><div class="body"><h3>城鎮</h3>
+          <div class="row" style="gap:8px">
+            <button id="btnHeroes">英雄</button>
+            <button id="btnFormation">編組</button>
+            <button id="btnSmith">鐵匠鋪</button>
+            <button id="btnMarket">市場</button>
+            <button id="btnTavern">酒館</button>
+            <button id="btnBlack">商人</button>
+          </div></div></div>
+        <div class="card"><div class="body">
+          <h3>前往冒險</h3>
+          <div class="row"><button id="btnToMap" class="btn-acc">地圖 →</button>
+            <button id="btnSaveTown">立即存檔</button>
+            <button id="btnExitTown">回主選單</button>
           </div>
-          <div class="footer">小提示：推進到 10 的倍數會遇到 Boss（30 秒限時）。</div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- Scene: Formation (圖6 簡化作業) -->
+    <section id="scene-formation" class="hidden">
+      <h3>編組（3×2）</h3>
+      <div id="gridFormation" class="row" style="gap:6px;flex-wrap:wrap"></div>
+      <div class="row" style="margin-top:10px"><button id="btnFormSave" class="btn-acc">保存</button><button id="btnFormBack">返回城鎮</button></div>
+    </section>
+
+    <!-- Scene: Map (圖7) -->
+    <section id="scene-map" class="hidden">
+      <h3>地圖：<span id="mapRegionName"></span></h3>
+      <div id="mapNodes" class="row" style="margin:10px 0;gap:12px"></div>
+      <div class="row"><button id="btnBackTown">← 返回城鎮</button></div>
+    </section>
+
+    <!-- Scene: Battle (圖8 簡化) -->
+    <section id="scene-battle" class="hidden">
+      <div class="row" style="justify-content:space-between">
+        <div class="row" style="gap:8px">
+          <button id="btnBattleSpd">速度 ×<span id="lblSpd">1</span></button>
+          <span class="muted">節點：<span id="lblNode"></span></span>
         </div>
-        <div id="tab-prestige" class="tab" style="display:none">
-          <h3>轉生（Ascend）</h3>
-          <p class="muted">重置至第 1 關並失去金幣與裝備，獲得 <b>遺物</b> 提升永久攻擊加成（每枚 +2%）。遺物數量取決於你達成的最高關卡。</p>
-          <div class="row">
-            <button id="btnAscend" class="btn-danger">立即轉生（獲得 <span id="relicPreview">0</span> 遺物）</button>
-          </div>
-          <div class="footer">公式：可獲遺物 = ⌊最高關/20⌋</div>
-        </div>
-        <div id="tab-opts" class="tab" style="display:none">
-          <h3>設定與存檔</h3>
-          <div class="row" style="gap:8px;flex-wrap:wrap">
-            <button id="btnSave">💾 立即儲存</button>
-            <button id="btnExport">⬇️ 匯出存檔</button>
-            <button id="btnImport">⬆️ 匯入存檔</button>
-            <button id="btnWipe" class="btn-danger">🗑️ 清除存檔</button>
-          </div>
-          <div class="footer">離線收益：最多計算 8 小時。每 10 秒自動儲存一次。</div>
+        <div class="row" style="gap:8px">
+          <button id="btnRetreat">撤退</button>
         </div>
       </div>
-    </aside>
+      <div class="grid" style="margin-top:10px">
+        <div class="card"><div class="body">
+          <h3>戰場</h3>
+          <div class="panel" id="battleLog" style="max-height:240px;overflow:auto"></div>
+        </div></div>
+        <div class="card"><div class="body">
+          <h3>隊伍狀態</h3>
+          <div id="partyView"></div>
+        </div></div>
+      </div>
+      <div class="row" style="margin-top:10px"><button id="btnBattleNext" class="btn-acc hidden">返回地圖</button></div>
+    </section>
+
+    <!-- Scene: Endless（沿用原掛機原型） -->
+    <section id="scene-endless" class="hidden">
+      <div class="card"><div class="body" id="endlessMount"></div></div>
+      <div class="row" style="margin-top:8px"><button id="btnBackFromEndless">← 返回主選單</button></div>
+    </section>
   </main>
 
   <script>
-  // ===== 工具函式 =====
+  // ========= 實用 =========
   const fmt = (n)=>Number(n).toLocaleString();
   const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-  const rand=(a,b)=>Math.random()*(b-a)+a;
   const choice=(arr)=>arr[Math.floor(Math.random()*arr.length)];
 
-  // ===== 遊戲狀態 =====
-  let G = {
-    version:'0.2.0',
-    running:true,
-    speed:1,
-    speedMax:2,
-    gold:0,
-    stage:1,
-    bestStage:1,
-    relics:0,
-    hero:{ lvl:1, atk:10, crit:5, critDmg:200, atkSpd:1.0 },
-    equip:{ weapon:null, armor:null, trinket:null },
-    inv:[],
-    enemy:null,
-    bossTimer:0,
-    lastTick: Date.now(),
-    lastSave: Date.now()
-  };
+  // ========= 場景管理 =========
+  const Scenes = ['menu','slots','setup','town','formation','map','battle','endless'];
+  let CUR = 'menu';
+  function goto(scene){
+    Scenes.forEach(s=>document.getElementById('scene-'+s).classList.add('hidden'));
+    document.getElementById('scene-'+scene).classList.remove('hidden');
+    CUR = scene; document.getElementById('pill-mode').textContent = scene.toUpperCase();
+  }
 
-  const RARITY = [
-    {name:'Common',    w:60, mult:1.00},
-    {name:'Uncommon',  w:25, mult:1.15},
-    {name:'Rare',      w:10, mult:1.35},
-    {name:'Epic',      w:4,  mult:1.70},
-    {name:'Legendary', w:1,  mult:2.20},
+  // ========= 故事模式資料骨架 =========
+  const BASE_HEROES = [
+    {id:'kaira',name:'凱拉',job:'戰士'},
+    {id:'wendy',name:'溫蒂',job:'坦克'},
+    {id:'jesse',name:'傑西',job:'射手'},
+    {id:'jennifer',name:'珍妮佛',job:'法師'},
+    {id:'hunter',name:'悍特',job:'牧師'},
   ];
-  const SLOTS = ['weapon','armor','trinket'];
+  const REGIONS = [
+    {id:'dawn',name:'曙光之地', nodes:6},
+    {id:'riot',name:'動亂之地', nodes:8},
+    {id:'forget',name:'追忘之地', nodes:10},
+    {id:'etern',name:'永劫之地', nodes:12},
+  ];
 
-  function weightedRarity(){
-    const sum = RARITY.reduce((s,r)=>s+r.w,0);
-    let r = Math.random()*sum;
-    for(const it of RARITY){ if((r-=it.w)<=0) return it; }
-    return RARITY[0];
-  }
-
-  function dps(){
-    const relicBonus = 1 + G.relics*0.02;
-    let atk = G.hero.atk * relicBonus;
-    if(G.equip.weapon) atk *= G.equip.weapon.power;
-    let crit = G.hero.crit + (G.equip.trinket?.crit||0);
-    let critDmg = G.hero.critDmg/100 + (G.equip.trinket?.critDmg||0);
-    let as = clamp(G.hero.atkSpd + (G.equip.armor?.atkSpd||0), 0.2, 20);
-    const avg = atk * (1 + clamp(crit/100,0,0.95)* (critDmg-1));
-    return avg * as;
+  function blankStoryState(){
+    return { mode:'story', day:1, gold:1000, region:'dawn', difficulty:'Normal', heroes:[], formation:[null,null,null,null,null,null], bestNode:0, speedMax:2 };
   }
 
-  function enemyForStage(stage){
-    const isBoss = stage%10===0;
-    const base = Math.pow(1.17, stage-1);
-    const hp = Math.floor(40*base * (isBoss? 12:1));
-    const gold = Math.floor(6*base * (isBoss? 8:1));
-    return { name: isBoss? 'Boss' : choice(['Slime','Bat','Wolf','Goblin','Wisp','Golem']),
-             maxHP: hp, hp: hp, gold:gold, boss:isBoss };
-  }
+  const SLOT_KEY = (i)=>`afk-hero-slot-${i}`;
+  function loadSlot(i){ try{ return JSON.parse(localStorage.getItem(SLOT_KEY(i))||'null'); }catch{ return null } }
+  function saveSlot(i,data){ localStorage.setItem(SLOT_KEY(i), JSON.stringify(Object.assign({updatedAt:Date.now()},data))); }
+  function deleteSlot(i){ localStorage.removeItem(SLOT_KEY(i)); }
 
-  function dropLoot(stage){
-    const dropChance = clamp(0.18 + stage*0.0015, 0.18, 0.45);
-    if(Math.random()>dropChance) return null;
-    const rarity = weightedRarity();
-    const slot = choice(SLOTS);
-    let item = { id:crypto.randomUUID(), name:'', slot, rarity:rarity.name, power:1, crit:0, critDmg:0, atkSpd:0 };
-    const p = 1 + (stage/100) * (rarity.mult-1 + 0.4);
-    if(slot==='weapon'){ item.name= choice(['短劍','長刀','戰斧','法杖','長槍'])+` · ${rarity.name}`; item.power = +(p).toFixed(2); }
-    if(slot==='armor'){ item.name= choice(['皮甲','鎖甲','板甲','法袍'])+` · ${rarity.name}`; item.atkSpd = +((p-1)/4).toFixed(2); }
-    if(slot==='trinket'){ item.name= choice(['指環','項鍊','護符'])+` · ${rarity.name}`; item.crit = +(Math.min(20,(p-1)*30)).toFixed(1); item.critDmg = +((p-1)*0.8).toFixed(2)+1; }
-    return item;
-  }
-
-  function log(msg, cls=''){
-    const div=document.getElementById('log');
-    const p=document.createElement('div');
-    if(cls) p.className=cls; p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-    div.prepend(p);
-    while(div.children.length>120) div.lastChild.remove();
-  }
-
-  // ===== UI 更新 =====
-  function syncHeader(){
-    document.getElementById('pill-stage').textContent = `Stage ${fmt(G.stage)}`;
-    document.getElementById('pill-gold').textContent = `Gold ${fmt(G.gold)}`;
-    document.getElementById('pill-relic').textContent = `Relics ${fmt(G.relics)}`;
-    document.getElementById('pill-dps').textContent = `DPS ${fmt(dps().toFixed(1))}`;
-  }
-  function syncHero(){
-    document.getElementById('sLevel').textContent = fmt(G.hero.lvl);
-    document.getElementById('sATK').textContent = fmt(G.hero.atk);
-    document.getElementById('sCrit').textContent = `${G.hero.crit.toFixed(1)}%`;
-    document.getElementById('sCritDmg').textContent = `${G.hero.critDmg}%`;
-    document.getElementById('sAS').textContent = (G.hero.atkSpd).toFixed(2);
-    document.getElementById('sRelic').textContent = `${(G.relics*2).toFixed(0)}%`;
-    document.getElementById('sDPS').textContent = fmt(dps().toFixed(1));
-    document.getElementById('costATK').textContent = fmt(costATK());
-    document.getElementById('costCrit').textContent = fmt(costCrit());
-    document.getElementById('costAS').textContent = fmt(costAS());
-    document.getElementById('costATK10').textContent = fmt(costATK(10));
-  }
-  function syncEnemy(){
-    const e=G.enemy; if(!e) return;
-    document.getElementById('kEnemy').textContent = e.boss? `👑 ${e.name}`: e.name;
-    document.getElementById('kEnemyHP').textContent = `${fmt(Math.max(0,Math.ceil(e.hp)))} / ${fmt(e.maxHP)}`;
-    const pct = clamp(e.hp/e.maxHP,0,1)*100; document.getElementById('hpBar').style.width = pct+'%';
-    document.getElementById('kStatus').textContent = e.boss? (G.bossTimer>0? `Boss 倒數 ${G.bossTimer.toFixed(1)}s` : 'Boss 失敗') : '前進中';
-  }
-
-  function renderInventory(){
-    const tbody=document.querySelector('#invTable tbody'); tbody.innerHTML='';
-    for(const it of G.inv){
-      const tr=document.createElement('tr');
-      tr.innerHTML = `<td class="rarity-${it.rarity}">${it.name}</td><td>${it.slot}</td><td>${describeItem(it)}</td><td>${it.rarity}</td>`;
-      tr.style.cursor='pointer';
-      tr.onclick=()=>equipItem(it);
-      tbody.appendChild(tr);
+  // ========= UI：檔位 =========
+  function renderSlots(){
+    const wrap=document.getElementById('slotList'); wrap.innerHTML='';
+    for(let i=1;i<=3;i++){
+      const S=loadSlot(i);
+      const card=document.createElement('div'); card.className='card';
+      card.innerHTML = `<div class="body"><h3>存檔 ${i}</h3>
+        <div class="muted">${S? `Day ${S.day} · ${REGIONS.find(r=>r.id===S.region)?.name||''} · ${S.difficulty}`:'空的'}</div>
+        <div class="row" style="margin-top:8px">
+          <button data-a="play">${S?'繼續':'新建'}</button>
+          <button data-a="rename">改名（預留）</button>
+          <button data-a="delete" class="btn-danger">刪除</button>
+        </div></div>`;
+      card.querySelector('[data-a="play"]').onclick=()=>{ currentSlot=i; if(S){ Story=S; goto('town'); syncTown(); } else { Story=blankStoryState(); goto('setup'); setupInit(); } };
+      card.querySelector('[data-a="delete"]').onclick=()=>{ if(confirm('刪除此存檔？')){ deleteSlot(i); renderSlots(); } };
+      wrap.appendChild(card);
     }
-    // Equipped display
-    const w=G.equip.weapon, a=G.equip.armor, t=G.equip.trinket;
-    document.getElementById('gear-weapon').textContent = w? w.name : '無';
-    document.getElementById('gear-weapon-bonus').textContent = w? `武器乘區 x${w.power}` : '—';
-    document.getElementById('gear-armor').textContent = a? a.name : '無';
-    document.getElementById('gear-armor-bonus').textContent = a? `攻速 +${a.atkSpd}` : '—';
-    document.getElementById('gear-trinket').textContent = t? t.name : '無';
-    document.getElementById('gear-trinket-bonus').textContent = t? `暴擊率 +${t.crit}% / 爆傷 +${(t.critDmg*100).toFixed(0)}%` : '—';
-  }
-  function describeItem(it){
-    if(it.slot==='weapon') return `武器乘區 x${it.power}`;
-    if(it.slot==='armor') return `攻速 +${it.atkSpd}`;
-    if(it.slot==='trinket') return `暴擊率 +${it.crit}% / 爆傷 +${(it.critDmg*100).toFixed(0)}%`;
-    return '';
   }
 
-  function equipItem(it){
-    G.equip[it.slot]=it; log(`已裝備 ${it.name}（${it.slot}）`, 'success');
-    syncHero(); renderInventory(); save();
-  }
-
-  // ===== 經濟與升級 =====
-  function costATK(n=1){
-    // 幾何級數成本，隨等級與已購買攻擊力上升
-    const base=10; return Math.floor(base * Math.pow(1.11, (G.hero.atk-10)) * (n===1?1: (n*0.9)) );
-  }
-  function costCrit(){ return Math.floor(25 * Math.pow(1.18, G.hero.crit)); }
-  function costAS(){ return Math.floor(50 * Math.pow(1.22, (G.hero.atkSpd*10-10))); }
-
-  function buy(cost,cb){ if(G.gold>=cost){ G.gold-=cost; cb(); syncHeader(); syncHero(); save(); return true;} log('金幣不足！','danger'); return false; }
-
-  // ===== 核心迴圈 =====
-  function ensureEnemy(){ if(!G.enemy){ G.enemy = enemyForStage(G.stage); if(G.enemy.boss) G.bossTimer=30; syncHeader(); syncEnemy(); } }
-
-  function tick(dt){
-    if(!G.running) return;
-    ensureEnemy();
-    const e=G.enemy; if(!e) return;
-
-    // Boss 倒數
-    if(e.boss){ G.bossTimer -= dt; if(G.bossTimer<=0 && e.hp>0){ log('Boss 失敗，回到上一關', 'danger'); G.stage = Math.max(1, G.stage-1); G.enemy=null; return; } }
-
-    const damage = dps() * dt * G.speed;
-    e.hp -= damage;
-    if(e.hp<=0){
-      // 擊殺
-      G.gold += e.gold; if(G.stage>G.bestStage) G.bestStage = G.stage;
-      const loot = dropLoot(G.stage);
-      if(loot){ G.inv.push(loot); log(`掉落：${loot.name}（${describeItem(loot)}）`,'success'); }
-      // 進入下一關或新 Boss
-      G.stage += 1; G.enemy=null; syncHeader(); renderInventory();
-    }
-    syncEnemy();
-  }
-
-  // ===== 離線收益 =====
-  function offlineReward(){
-    const now=Date.now();
-    const elapsed = clamp((now - (load()?.lastSave || now))/1000, 0, 8*3600); // 最多 8 小時
-    if(elapsed<5) return; // 太短略過
-    // 估算每殺時間（以敵人 HP / DPS）
-    const e = enemyForStage(G.stage);
-    const perKill = Math.max(1.2, e.maxHP / Math.max(1, dps()));
-    const kills = Math.floor(elapsed / perKill);
-    const gold = kills * e.gold;
-    G.gold += gold;
-    log(`離線收益：擊敗約 ${fmt(kills)} 名敵人，獲得 ${fmt(gold)} 金幣。`,'success');
-  }
-
-  // ===== 存檔 =====
-  function save(){
-    G.lastSave = Date.now(); localStorage.setItem('afk-hero-save', JSON.stringify(G));
-  }
-  function load(){
-    try{ return JSON.parse(localStorage.getItem('afk-hero-save')||'null'); }catch(e){ return null }
-  }
-  function applySave(S){ if(!S) return; G = Object.assign(G,S); }
-
-  // ===== 事件繫結 =====
-  function bind(){
-    document.getElementById('btnStart').onclick=()=>{ G.running=!G.running; log(G.running?'開始掛機':'暫停'); };
-    document.getElementById('btnFast').onclick=()=>{ G.speed = G.speed>=G.speedMax?1:G.speed+1; document.getElementById('speedLabel').textContent = G.speed; };
-    document.getElementById('btnNext').onclick=()=>{ G.stage+=1; G.enemy=null; syncHeader(); };
-    document.getElementById('btnRetry').onclick=()=>{ if(G.enemy?.boss){ G.bossTimer=30; G.enemy.hp=G.enemy.maxHP; log('Boss 重置'); syncEnemy(); }};
-    document.getElementById('btnBuyATK').onclick=()=>buy(costATK(),()=>{G.hero.atk+=1;});
-    document.getElementById('btnBuyCrit').onclick=()=>buy(costCrit(),()=>{G.hero.crit+=1;});
-    document.getElementById('btnBuyAS').onclick=()=>buy(costAS(),()=>{G.hero.atkSpd=+(G.hero.atkSpd+0.1).toFixed(2)});
-    document.getElementById('btnAtk10').onclick=()=>buy(costATK(10),()=>{G.hero.atk+=10;});
-    document.getElementById('btnAscSpd').onclick=()=>{ if(G.gold>=500){ G.gold-=500; G.speedMax=4; log('已解鎖加速上限 x4','success'); syncHeader(); save(); } else log('金幣不足','danger') };
-
-    // Tabs
-    document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
-      document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      const id = b.dataset.tab;
-      document.querySelectorAll('.tab').forEach(x=>x.style.display='none');
-      document.getElementById('tab-'+id).style.display='block';
+  // ========= Setup（地區/難度/英雄/置物） =========
+  let Story = blankStoryState(); let currentSlot=1;
+  function setupInit(){
+    const selR=document.getElementById('selRegion'); selR.innerHTML='';
+    REGIONS.forEach(r=>{ const o=document.createElement('option'); o.value=r.id; o.textContent=r.name; selR.appendChild(o); });
+    document.getElementById('selDiff').value=Story.difficulty;
+    document.getElementById('achvPts').textContent = 20; // 假資料：20 點可花
+    // 英雄
+    const hp=document.getElementById('heroPick'); hp.innerHTML='';
+    BASE_HEROES.forEach(h=>{
+      const b=document.createElement('button'); b.textContent=`${h.name}（${h.job}）`;
+      b.onclick=()=>{
+        const idx = Story.heroes.findIndex(x=>x.id===h.id);
+        if(idx>=0){ Story.heroes.splice(idx,1); b.style.outline=''; }
+        else if(Story.heroes.length<5){ Story.heroes.push(Object.assign({level:1},h)); b.style.outline='2px solid #3c7bff'; }
+      };
+      hp.appendChild(b);
     });
-
-    // Prestige
-    document.getElementById('btnAscend').onclick=()=>{
-      const gain = Math.floor(G.bestStage/20);
-      if(gain<=0){ log('尚未達到轉生門檻（至少最高關 20）','danger'); return; }
-      G.relics += gain; log(`轉生成功！獲得 ${gain} 遺物。`,'success');
-      // reset
-      G.stage=1; G.bestStage=1; G.gold=0; G.inv=[]; G.equip={weapon:null,armor:null,trinket:null}; G.enemy=null;
-      save(); syncHeader(); syncHero(); renderInventory();
-    };
-
-    // Save/Load
-    document.getElementById('btnSave').onclick=()=>{ save(); log('已手動儲存','success') };
-    document.getElementById('btnExport').onclick=()=>{
-      const data=btoa(unescape(encodeURIComponent(JSON.stringify(G))));
-      navigator.clipboard.writeText(data); log('存檔字串已複製到剪貼簿','success');
-    };
-    document.getElementById('btnImport').onclick=async()=>{
-      const str=prompt('貼上匯入字串（將覆蓋目前進度）');
-      if(!str) return; try{ const obj=JSON.parse(decodeURIComponent(escape(atob(str)))); applySave(obj); log('匯入成功','success'); G.enemy=null; syncHeader(); syncHero(); renderInventory(); save(); }catch(e){ log('匯入失敗：字串不正確','danger'); }
-    };
-    document.getElementById('btnWipe').onclick=()=>{ if(confirm('確定清除存檔？此動作不可復原')){ localStorage.removeItem('afk-hero-save'); location.reload(); } };
+    // 置物（簡化：金幣+5000 / 裝備圖鑑等級+1）
+    const sp=document.getElementById('startPerks'); sp.innerHTML='';
+    ['金幣+5000','建築等級+1','裝備圖鑑等級+1'].forEach((name,i)=>{
+      const b=document.createElement('button'); b.textContent=name; b.onclick=()=>alert('示意：消耗成就點，待實作'); sp.appendChild(b);
+    });
   }
 
-  // ===== 初始化 =====
-  function init(){
-    const S=load(); if(S){ applySave(S); }
-    offlineReward();
-    bind();
-    ensureEnemy();
-    syncHeader(); syncHero(); renderInventory(); syncEnemy();
-    // 預覽可得遺物
-    setInterval(()=>{ document.getElementById('relicPreview').textContent = Math.floor(G.bestStage/20); }, 1000);
-    // 自動儲存
-    setInterval(()=>save(), 10000);
+  document.getElementById('btnBeginStory').onclick=()=>{
+    Story.region = document.getElementById('selRegion').value;
+    Story.difficulty = document.getElementById('selDiff').value;
+    if(Story.heroes.length===0){ alert('請至少選 1 位英雄'); return; }
+    saveSlot(currentSlot, Story);
+    goto('town'); syncTown();
+  };
+  document.getElementById('btnBackSetup').onclick=()=>{ goto('slots'); };
 
-    // 主迴圈
-    let prev=performance.now();
-    function loop(now){
-      const dt = (now-prev)/1000; prev=now;
-      tick(dt);
-      requestAnimationFrame(loop);
+  // ========= 城鎮 =========
+  function syncTown(){
+    document.getElementById('kTownRegion').textContent = REGIONS.find(r=>r.id===Story.region)?.name || '';
+    document.getElementById('kDay').textContent = Story.day;
+    document.getElementById('kPower').textContent = Story.heroes.length*100;
+    document.getElementById('kSpeedMax').textContent = `×${Story.speedMax}`;
+    document.getElementById('pill-gold').textContent = `Gold ${fmt(Story.gold||0)}`;
+    document.getElementById('pill-day').textContent = `Day ${fmt(Story.day)}`;
+  }
+  document.getElementById('btnToMap').onclick=()=>{ renderMap(); goto('map'); };
+  document.getElementById('btnExitTown').onclick=()=>{ goto('menu'); };
+  document.getElementById('btnSaveTown').onclick=()=>{ saveSlot(currentSlot, Story); alert('已儲存'); };
+  document.getElementById('btnHeroes').onclick=()=>{ alert('英雄面板預留（v0.4）'); };
+  document.getElementById('btnSmith').onclick=()=>{ alert('鐵匠鋪預留（v0.5）'); };
+  document.getElementById('btnMarket').onclick=()=>{ alert('市場預留'); };
+  document.getElementById('btnTavern').onclick=()=>{ alert('酒館預留'); };
+  document.getElementById('btnBlack').onclick=()=>{ alert('黑市預留'); };
+  document.getElementById('btnFormation').onclick=()=>{ renderFormation(); goto('formation'); };
+
+  // ========= 編組 =========
+  function renderFormation(){
+    const gf=document.getElementById('gridFormation'); gf.innerHTML='';
+    for(let i=0;i<6;i++){
+      const div=document.createElement('div'); div.className='panel'; div.style.width='110px'; div.style.height='64px';
+      const hero = Story.formation[i] && Story.heroes.find(h=>h.id===Story.formation[i]);
+      div.textContent = hero? `${hero.name}`: `格 ${i+1}`;
+      div.onclick=()=>{
+        const pick=prompt('放入英雄編號（0~'+(Story.heroes.length-1)+'），或留空移除');
+        if(pick===''||pick===null){ Story.formation[i]=null; }
+        else{ const idx=parseInt(pick); if(!isNaN(idx)&&Story.heroes[idx]) Story.formation[i]=Story.heroes[idx].id; }
+        renderFormation();
+      };
+      gf.appendChild(div);
     }
+  }
+  document.getElementById('btnFormSave').onclick=()=>{ saveSlot(currentSlot, Story); alert('已保存編組'); };
+  document.getElementById('btnFormBack').onclick=()=>{ goto('town'); };
+
+  // ========= 地圖 =========
+  function renderMap(){
+    document.getElementById('mapRegionName').textContent = REGIONS.find(r=>r.id===Story.region)?.name || '';
+    const wrap=document.getElementById('mapNodes'); wrap.innerHTML='';
+    const R = REGIONS.find(r=>r.id===Story.region); const n = R.nodes;
+    for(let i=0;i<n;i++){
+      const btn=document.createElement('button'); btn.textContent = i===n-1? `Boss ${i+1}` : `節點 ${i+1}`;
+      btn.disabled = i>Story.bestNode+1; // 解鎖到下一個
+      btn.onclick=()=>startBattle(i);
+      wrap.appendChild(btn);
+    }
+  }
+  document.getElementById('btnBackTown').onclick=()=>{ goto('town'); };
+
+  // ========= 簡化戰鬥（採用期望值演算 + 日誌輸出） =========
+  let BTL = {speed:1};
+  function partyPower(){ return Story.heroes.length? Story.heroes.length* (150 + (Story.day*5)) : 100; }
+  function enemyForNode(node){
+    const base = 1.15 ** node; const boss = node % (REGIONS.find(r=>r.id===Story.region).nodes-1) === 0 && node>0;
+    let hp = 400*base * (boss? 6:1); let atk = 30*base * (boss? 1.5:1);
+    // 難度倍率
+    const diff = Story.difficulty==='Hard'? {hp:1.6, atk:1.2}: Story.difficulty==='Nightmare'? {hp:2.2, atk:1.5}: {hp:1, atk:1};
+    hp*=diff.hp; atk*=diff.atk;
+    return {name: boss?'Boss':'怪物', hp:Math.floor(hp), atk:Math.floor(atk)}
+  }
+
+  function startBattle(node){
+    BTL={speed:1,node,enemy:enemyForNode(node),t:0,done:false};
+    document.getElementById('lblSpd').textContent='1';
+    document.getElementById('lblNode').textContent = node+1;
+    const log=document.getElementById('battleLog'); log.innerHTML='';
+    const party = partyPower();
+    appendLog(`遭遇 ${BTL.enemy.name}（HP ${fmt(BTL.enemy.hp)} / ATK ${fmt(BTL.enemy.atk)}）`);
+    goto('battle');
+
+    // 簡化模擬：每 0.5s 我方與敵方互換傷害
+    let timer = setInterval(()=>{
+      if(BTL.done){ clearInterval(timer); return; }
+      const myDPS = party/20; // 粗糙期望
+      const enemyDPS = BTL.enemy.atk/3;
+      BTL.enemy.hp -= myDPS * 0.5 * BTL.speed;
+      const teamHP = (Story.heroes.length*300) - enemyDPS * 0.5 * BTL.speed * (1+node*0.05);
+      appendLog(`我方造成 ${fmt(Math.max(1,Math.floor(myDPS*0.5*BTL.speed)))}, 敵方剩 ${fmt(Math.max(0,Math.floor(BTL.enemy.hp)))}`);
+      if(BTL.enemy.hp<=0){
+        appendLog('勝利！獲得金幣與素材。');
+        Story.gold += 200 + node*20; Story.bestNode=Math.max(Story.bestNode,node); saveSlot(currentSlot, Story);
+        document.getElementById('btnBattleNext').classList.remove('hidden'); BTL.done=true; syncTown();
+      }
+      if(teamHP<=0){ appendLog('敗北… 返回上一節點'); Story.bestNode=Math.max(0,Story.bestNode-1); saveSlot(currentSlot, Story); document.getElementById('btnBattleNext').classList.remove('hidden'); BTL.done=true; }
+    }, 500);
+  }
+  function appendLog(msg){ const d=document.getElementById('battleLog'); const p=document.createElement('div'); p.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`; d.prepend(p); while(d.children.length>80) d.lastChild.remove(); }
+  document.getElementById('btnBattleSpd').onclick=()=>{ BTL.speed = BTL.speed>= (Story.speedMax||2) ? 1 : BTL.speed+0.5; document.getElementById('lblSpd').textContent=BTL.speed; };
+  document.getElementById('btnRetreat').onclick=()=>{ document.getElementById('btnBattleNext').classList.remove('hidden'); appendLog('撤退，返回地圖'); BTL.done=true; };
+  document.getElementById('btnBattleNext').onclick=()=>{ document.getElementById('btnBattleNext').classList.add('hidden'); goto('map'); renderMap(); };
+
+  // ========= 無盡模式（沿用 v0.2 核心，但簡化掛載） =========
+  // 直接動態注入一個迷你掛機場景（保留你之前的設計理念）
+  let Endless = null;
+  function mountEndless(){
+    const root=document.getElementById('endlessMount');
+    root.innerHTML = `<div class="row"><button id=edStart class=btn-acc>▶ 開始/暫停</button><button id=edNext>⏭ 下一關</button><button id=edFast>⏩ ×<span id=edSpd>1</span></button></div>
+      <div class=panel id=edLog style="margin-top:8px;max-height:240px;overflow:auto"></div>`;
+    Endless = {stage:1,gold:0,spd:1,hp:200,max:200,running:true};
+    const log=(m)=>{ const d=document.getElementById('edLog'); const p=document.createElement('div'); p.textContent=m; d.prepend(p); };
+    document.getElementById('edStart').onclick=()=>{Endless.running=!Endless.running};
+    document.getElementById('edNext').onclick=()=>{Endless.stage++; Endless.hp=Endless.max=Math.floor(Endless.max*1.17)};
+    document.getElementById('edFast').onclick=()=>{Endless.spd=Endless.spd>=2?1:Endless.spd+1; document.getElementById('edSpd').textContent=Endless.spd;};
+    let prev=performance.now();
+    function loop(now){ const dt=(now-prev)/1000; prev=now; if(Endless?.running){ Endless.hp -= 20*dt*Endless.spd; if(Endless.hp<=0){Endless.gold+=10*Endless.stage; Endless.stage++; Endless.max=Math.floor(Endless.max*1.17); Endless.hp=Endless.max; log(`→ Stage ${Endless.stage}`);} }
+      requestAnimationFrame(loop); }
     requestAnimationFrame(loop);
   }
 
-  init();
+  // ========= 主選單事件 =========
+  document.getElementById('btnStory').onclick=()=>{ renderSlots(); goto('slots'); };
+  document.getElementById('btnEndless').onclick=()=>{ goto('endless'); mountEndless(); };
+  document.getElementById('btnBackFromEndless').onclick=()=>{ goto('menu'); };
+  document.getElementById('btnBackSlots').onclick=()=>{ goto('menu'); };
+
+  // 啟動
+  goto('menu');
   </script>
 </body>
 </html>
