@@ -1,385 +1,808 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>掛機吧！勇者 — 網頁版原型 v0.3</title>
-  <style>
-    :root{
-      --bg:#0b1220; --panel:#121a2b; --muted:#8aa0c6; --text:#e9f0ff; --accent:#6ec7ff; --lime:#8bffb0; --danger:#ff6e86; --gold:#ffd37a;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans TC',sans-serif;background:radial-gradient(1200px 600px at 50% -10%,#12203a,#0b1220 60%);color:var(--text)}
-    header{position:sticky;top:0;background:#0b1220d0;backdrop-filter:saturate(140%) blur(6px);z-index:10;border-bottom:1px solid #1d2a45}
-    header .wrap{max-width:1120px;margin:auto;padding:10px 14px;display:flex;gap:12px;align-items:center}
-    .pill{padding:4px 10px;border:1px solid #2b3b63;border-radius:999px;color:var(--muted);font-size:12px}
-    main{max-width:1120px;margin:auto;padding:16px}
-    .card{background:var(--panel);border:1px solid #1d2a45;border-radius:14px;box-shadow:0 6px 24px #0006}
-    .body{padding:14px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .col{display:flex;flex-direction:column;gap:8px}
-    button{background:#162446;border:1px solid #2b3b63;color:#cfe3ff;padding:10px 12px;border-radius:10px;cursor:pointer}
-    button:hover{filter:brightness(1.08)}
-    .btn-acc{border-color:#3c7bff;background:#17305a}
-    .btn-danger{border-color:#6b2b3c;background:#3a0f18;color:#ffd4db}
-    .muted{color:var(--muted)}
-    h1,h2,h3{margin:0 0 8px 0}
-    .center{display:flex;justify-content:center;align-items:center}
-    .menu-list{display:flex;flex-direction:column;gap:10px;width:min(520px,90vw)}
-    .menu-list button{width:100%;font-size:18px;padding:14px}
-    .hidden{display:none}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px 6px;border-bottom:1px solid #1d2a45;font-size:14px}
-    th{color:#bcd2ff;text-align:left}
-    .panel{padding:14px;border:1px solid #1d2a45;border-radius:12px;background:#0f1830}
-    .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .kpi .box{padding:10px;border:1px solid #1d2a45;border-radius:12px;text-align:center;background:#0f1830}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}.kpi{grid-template-columns:repeat(2,1fr)}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>掛機吧!勇者 - No-brainer Heroes</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: oklch(0.12 0.02 220);
+            color: oklch(0.92 0.01 180);
+            min-height: 100vh;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid oklch(0.3 0.02 220);
+            background: oklch(0.18 0.02 220);
+            color: oklch(0.92 0.01 180);
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            border-color: oklch(0.65 0.15 200);
+            color: oklch(0.65 0.15 200);
+            background: oklch(0.25 0.02 220);
+        }
+        
+        .btn-primary {
+            background: oklch(0.65 0.15 200);
+            border-color: oklch(0.65 0.15 200);
+            color: oklch(0.12 0.02 220);
+        }
+        
+        .btn-primary:hover {
+            background: oklch(0.7 0.15 200);
+            border-color: oklch(0.7 0.15 200);
+        }
+        
+        .card {
+            background: oklch(0.18 0.02 220);
+            border: 2px solid oklch(0.3 0.02 220);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        
+        .flex {
+            display: flex;
+        }
+        
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        
+        .text-center { text-align: center; }
+        .text-primary { color: oklch(0.65 0.15 200); }
+        .text-muted { color: oklch(0.6 0.01 180); }
+        
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        
+        .w-full { width: 100%; }
+        .h-screen { min-height: 100vh; }
+        
+        .progress-bar {
+            height: 0.5rem;
+            background: oklch(0.22 0.02 220);
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: oklch(0.65 0.15 200);
+            transition: width 0.3s;
+        }
+        
+        .hero-portrait {
+            font-size: 3rem;
+            text-align: center;
+        }
+        
+        .stat-box {
+            background: oklch(0.22 0.02 220);
+            border: 1px solid oklch(0.3 0.02 220);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        
+        .position-slot {
+            height: 8rem;
+            border: 2px dashed oklch(0.3 0.02 220);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .position-slot:hover {
+            border-color: oklch(0.65 0.15 200);
+        }
+        
+        .position-slot.filled {
+            border-style: solid;
+            background: oklch(0.22 0.02 220);
+        }
+        
+        .position-label {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: oklch(0.22 0.02 220);
+            border: 1px solid oklch(0.3 0.02 220);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .top-bar {
+            background: oklch(0.18 0.02 220);
+            border-bottom: 2px solid oklch(0.3 0.02 220);
+            padding: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <div style="font-weight:800;letter-spacing:.5px">🗡️ 掛機吧！勇者 — 原型 v0.3</div>
-      <div class="pill" id="pill-mode">主選單</div>
-      <div class="pill" id="pill-gold">Gold 0</div>
-      <div class="pill" id="pill-dps">DPS 0</div>
-      <div class="pill" id="pill-day">Day 0</div>
-      <div style="margin-left:auto" class="muted">LocalStorage • 單檔</div>
-    </div>
-  </header>
-
-  <main>
-    <!-- Scene: Main Menu (圖1) -->
-    <section id="scene-menu" class="center" style="min-height:70vh;flex-direction:column;gap:14px">
-      <h1>掛機吧！勇者</h1>
-      <div class="menu-list">
-        <button id="btnStory">故事模式</button>
-        <button id="btnEndless">無盡模式（原掛機原型）</button>
-        <button id="btnAchv">成就（預留）</button>
-        <button id="btnSettings">設定</button>
-        <button id="btnCredits">製作人員</button>
-      </div>
-    </section>
-
-    <!-- Scene: Slots (圖2) -->
-    <section id="scene-slots" class="hidden">
-      <h2>選擇存檔（故事模式）</h2>
-      <div id="slotList" class="grid"></div>
-      <div class="row" style="margin-top:10px"><button id="btnBackSlots">← 返回主選單</button></div>
-    </section>
-
-    <!-- Scene: Setup (圖3) -->
-    <section id="scene-setup" class="hidden">
-      <div class="grid">
-        <div class="card"><div class="body">
-          <h3>地區與難度</h3>
-          <div class="row"><select id="selRegion"></select><select id="selDiff">
-            <option value="Normal">普通</option><option value="Hard">困難</option><option value="Nightmare">惡夢</option></select></div>
-          <div class="panel small muted">難度影響：敵人生命/攻擊、掉落率與成就點倍率。</div>
-        </div></div>
-        <div class="card"><div class="body">
-          <h3>初始英雄（最多 5 位）</h3>
-          <div id="heroPick" class="row"></div>
-        </div></div>
-        <div class="card"><div class="body">
-          <h3>初始置物</h3>
-          <div id="startPerks" class="row"></div>
-          <div class="muted">成就點：<span id="achvPts">0</span></div>
-        </div></div>
-        <div class="card"><div class="body center" style="gap:10px">
-          <button id="btnBeginStory" class="btn-acc">冒險！</button>
-          <button id="btnBackSetup">返回</button>
-        </div></div>
-      </div>
-    </section>
-
-    <!-- Scene: Town (圖4) -->
-    <section id="scene-town" class="hidden">
-      <div class="kpi" style="margin-bottom:10px">
-        <div class="box"><div class="muted small">位置</div><div id="kTownRegion">曙光之地</div></div>
-        <div class="box"><div class="muted small">第幾天</div><div id="kDay">1</div></div>
-        <div class="box"><div class="muted small">隊伍戰力</div><div id="kPower">0</div></div>
-        <div class="box"><div class="muted small">速度倍率上限</div><div id="kSpeedMax">×2</div></div>
-      </div>
-      <div class="grid">
-        <div class="card"><div class="body"><h3>城鎮</h3>
-          <div class="row" style="gap:8px">
-            <button id="btnHeroes">英雄</button>
-            <button id="btnFormation">編組</button>
-            <button id="btnSmith">鐵匠鋪</button>
-            <button id="btnMarket">市場</button>
-            <button id="btnTavern">酒館</button>
-            <button id="btnBlack">商人</button>
-          </div></div></div>
-        <div class="card"><div class="body">
-          <h3>前往冒險</h3>
-          <div class="row"><button id="btnToMap" class="btn-acc">地圖 →</button>
-            <button id="btnSaveTown">立即存檔</button>
-            <button id="btnExitTown">回主選單</button>
-          </div>
-        </div></div>
-      </div>
-    </section>
-
-    <!-- Scene: Formation (圖6 簡化作業) -->
-    <section id="scene-formation" class="hidden">
-      <h3>編組（3×2）</h3>
-      <div id="gridFormation" class="row" style="gap:6px;flex-wrap:wrap"></div>
-      <div class="row" style="margin-top:10px"><button id="btnFormSave" class="btn-acc">保存</button><button id="btnFormBack">返回城鎮</button></div>
-    </section>
-
-    <!-- Scene: Map (圖7) -->
-    <section id="scene-map" class="hidden">
-      <h3>地圖：<span id="mapRegionName"></span></h3>
-      <div id="mapNodes" class="row" style="margin:10px 0;gap:12px"></div>
-      <div class="row"><button id="btnBackTown">← 返回城鎮</button></div>
-    </section>
-
-    <!-- Scene: Battle (圖8 簡化) -->
-    <section id="scene-battle" class="hidden">
-      <div class="row" style="justify-content:space-between">
-        <div class="row" style="gap:8px">
-          <button id="btnBattleSpd">速度 ×<span id="lblSpd">1</span></button>
-          <span class="muted">節點：<span id="lblNode"></span></span>
-        </div>
-        <div class="row" style="gap:8px">
-          <button id="btnRetreat">撤退</button>
-        </div>
-      </div>
-      <div class="grid" style="margin-top:10px">
-        <div class="card"><div class="body">
-          <h3>戰場</h3>
-          <div class="panel" id="battleLog" style="max-height:240px;overflow:auto"></div>
-        </div></div>
-        <div class="card"><div class="body">
-          <h3>隊伍狀態</h3>
-          <div id="partyView"></div>
-        </div></div>
-      </div>
-      <div class="row" style="margin-top:10px"><button id="btnBattleNext" class="btn-acc hidden">返回地圖</button></div>
-    </section>
-
-    <!-- Scene: Endless（沿用原掛機原型） -->
-    <section id="scene-endless" class="hidden">
-      <div class="card"><div class="body" id="endlessMount"></div></div>
-      <div class="row" style="margin-top:8px"><button id="btnBackFromEndless">← 返回主選單</button></div>
-    </section>
-  </main>
-
-  <script>
-  // ========= 實用 =========
-  const fmt = (n)=>Number(n).toLocaleString();
-  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-  const choice=(arr)=>arr[Math.floor(Math.random()*arr.length)];
-
-  // ========= 場景管理 =========
-  const Scenes = ['menu','slots','setup','town','formation','map','battle','endless'];
-  let CUR = 'menu';
-  function goto(scene){
-    Scenes.forEach(s=>document.getElementById('scene-'+s).classList.add('hidden'));
-    document.getElementById('scene-'+scene).classList.remove('hidden');
-    CUR = scene; document.getElementById('pill-mode').textContent = scene.toUpperCase();
-  }
-
-  // ========= 故事模式資料骨架 =========
-  const BASE_HEROES = [
-    {id:'kaira',name:'凱拉',job:'戰士'},
-    {id:'wendy',name:'溫蒂',job:'坦克'},
-    {id:'jesse',name:'傑西',job:'射手'},
-    {id:'jennifer',name:'珍妮佛',job:'法師'},
-    {id:'hunter',name:'悍特',job:'牧師'},
-  ];
-  const REGIONS = [
-    {id:'dawn',name:'曙光之地', nodes:6},
-    {id:'riot',name:'動亂之地', nodes:8},
-    {id:'forget',name:'追忘之地', nodes:10},
-    {id:'etern',name:'永劫之地', nodes:12},
-  ];
-
-  function blankStoryState(){
-    return { mode:'story', day:1, gold:1000, region:'dawn', difficulty:'Normal', heroes:[], formation:[null,null,null,null,null,null], bestNode:0, speedMax:2 };
-  }
-
-  const SLOT_KEY = (i)=>`afk-hero-slot-${i}`;
-  function loadSlot(i){ try{ return JSON.parse(localStorage.getItem(SLOT_KEY(i))||'null'); }catch{ return null } }
-  function saveSlot(i,data){ localStorage.setItem(SLOT_KEY(i), JSON.stringify(Object.assign({updatedAt:Date.now()},data))); }
-  function deleteSlot(i){ localStorage.removeItem(SLOT_KEY(i)); }
-
-  // ========= UI：檔位 =========
-  function renderSlots(){
-    const wrap=document.getElementById('slotList'); wrap.innerHTML='';
-    for(let i=1;i<=3;i++){
-      const S=loadSlot(i);
-      const card=document.createElement('div'); card.className='card';
-      card.innerHTML = `<div class="body"><h3>存檔 ${i}</h3>
-        <div class="muted">${S? `Day ${S.day} · ${REGIONS.find(r=>r.id===S.region)?.name||''} · ${S.difficulty}`:'空的'}</div>
-        <div class="row" style="margin-top:8px">
-          <button data-a="play">${S?'繼續':'新建'}</button>
-          <button data-a="rename">改名（預留）</button>
-          <button data-a="delete" class="btn-danger">刪除</button>
-        </div></div>`;
-      card.querySelector('[data-a="play"]').onclick=()=>{ currentSlot=i; if(S){ Story=S; goto('town'); syncTown(); } else { Story=blankStoryState(); goto('setup'); setupInit(); } };
-      card.querySelector('[data-a="delete"]').onclick=()=>{ if(confirm('刪除此存檔？')){ deleteSlot(i); renderSlots(); } };
-      wrap.appendChild(card);
-    }
-  }
-
-  // ========= Setup（地區/難度/英雄/置物） =========
-  let Story = blankStoryState(); let currentSlot=1;
-  function setupInit(){
-    const selR=document.getElementById('selRegion'); selR.innerHTML='';
-    REGIONS.forEach(r=>{ const o=document.createElement('option'); o.value=r.id; o.textContent=r.name; selR.appendChild(o); });
-    document.getElementById('selDiff').value=Story.difficulty;
-    document.getElementById('achvPts').textContent = 20; // 假資料：20 點可花
-    // 英雄
-    const hp=document.getElementById('heroPick'); hp.innerHTML='';
-    BASE_HEROES.forEach(h=>{
-      const b=document.createElement('button'); b.textContent=`${h.name}（${h.job}）`;
-      b.onclick=()=>{
-        const idx = Story.heroes.findIndex(x=>x.id===h.id);
-        if(idx>=0){ Story.heroes.splice(idx,1); b.style.outline=''; }
-        else if(Story.heroes.length<5){ Story.heroes.push(Object.assign({level:1},h)); b.style.outline='2px solid #3c7bff'; }
-      };
-      hp.appendChild(b);
-    });
-    // 置物（簡化：金幣+5000 / 裝備圖鑑等級+1）
-    const sp=document.getElementById('startPerks'); sp.innerHTML='';
-    ['金幣+5000','建築等級+1','裝備圖鑑等級+1'].forEach((name,i)=>{
-      const b=document.createElement('button'); b.textContent=name; b.onclick=()=>alert('示意：消耗成就點，待實作'); sp.appendChild(b);
-    });
-  }
-
-  document.getElementById('btnBeginStory').onclick=()=>{
-    Story.region = document.getElementById('selRegion').value;
-    Story.difficulty = document.getElementById('selDiff').value;
-    if(Story.heroes.length===0){ alert('請至少選 1 位英雄'); return; }
-    saveSlot(currentSlot, Story);
-    goto('town'); syncTown();
-  };
-  document.getElementById('btnBackSetup').onclick=()=>{ goto('slots'); };
-
-  // ========= 城鎮 =========
-  function syncTown(){
-    document.getElementById('kTownRegion').textContent = REGIONS.find(r=>r.id===Story.region)?.name || '';
-    document.getElementById('kDay').textContent = Story.day;
-    document.getElementById('kPower').textContent = Story.heroes.length*100;
-    document.getElementById('kSpeedMax').textContent = `×${Story.speedMax}`;
-    document.getElementById('pill-gold').textContent = `Gold ${fmt(Story.gold||0)}`;
-    document.getElementById('pill-day').textContent = `Day ${fmt(Story.day)}`;
-  }
-  document.getElementById('btnToMap').onclick=()=>{ renderMap(); goto('map'); };
-  document.getElementById('btnExitTown').onclick=()=>{ goto('menu'); };
-  document.getElementById('btnSaveTown').onclick=()=>{ saveSlot(currentSlot, Story); alert('已儲存'); };
-  document.getElementById('btnHeroes').onclick=()=>{ alert('英雄面板預留（v0.4）'); };
-  document.getElementById('btnSmith').onclick=()=>{ alert('鐵匠鋪預留（v0.5）'); };
-  document.getElementById('btnMarket').onclick=()=>{ alert('市場預留'); };
-  document.getElementById('btnTavern').onclick=()=>{ alert('酒館預留'); };
-  document.getElementById('btnBlack').onclick=()=>{ alert('黑市預留'); };
-  document.getElementById('btnFormation').onclick=()=>{ renderFormation(); goto('formation'); };
-
-  // ========= 編組 =========
-  function renderFormation(){
-    const gf=document.getElementById('gridFormation'); gf.innerHTML='';
-    for(let i=0;i<6;i++){
-      const div=document.createElement('div'); div.className='panel'; div.style.width='110px'; div.style.height='64px';
-      const hero = Story.formation[i] && Story.heroes.find(h=>h.id===Story.formation[i]);
-      div.textContent = hero? `${hero.name}`: `格 ${i+1}`;
-      div.onclick=()=>{
-        const pick=prompt('放入英雄編號（0~'+(Story.heroes.length-1)+'），或留空移除');
-        if(pick===''||pick===null){ Story.formation[i]=null; }
-        else{ const idx=parseInt(pick); if(!isNaN(idx)&&Story.heroes[idx]) Story.formation[i]=Story.heroes[idx].id; }
-        renderFormation();
-      };
-      gf.appendChild(div);
-    }
-  }
-  document.getElementById('btnFormSave').onclick=()=>{ saveSlot(currentSlot, Story); alert('已保存編組'); };
-  document.getElementById('btnFormBack').onclick=()=>{ goto('town'); };
-
-  // ========= 地圖 =========
-  function renderMap(){
-    document.getElementById('mapRegionName').textContent = REGIONS.find(r=>r.id===Story.region)?.name || '';
-    const wrap=document.getElementById('mapNodes'); wrap.innerHTML='';
-    const R = REGIONS.find(r=>r.id===Story.region); const n = R.nodes;
-    for(let i=0;i<n;i++){
-      const btn=document.createElement('button'); btn.textContent = i===n-1? `Boss ${i+1}` : `節點 ${i+1}`;
-      btn.disabled = i>Story.bestNode+1; // 解鎖到下一個
-      btn.onclick=()=>startBattle(i);
-      wrap.appendChild(btn);
-    }
-  }
-  document.getElementById('btnBackTown').onclick=()=>{ goto('town'); };
-
-  // ========= 簡化戰鬥（採用期望值演算 + 日誌輸出） =========
-  let BTL = {speed:1};
-  function partyPower(){ return Story.heroes.length? Story.heroes.length* (150 + (Story.day*5)) : 100; }
-  function enemyForNode(node){
-    const base = 1.15 ** node; const boss = node % (REGIONS.find(r=>r.id===Story.region).nodes-1) === 0 && node>0;
-    let hp = 400*base * (boss? 6:1); let atk = 30*base * (boss? 1.5:1);
-    // 難度倍率
-    const diff = Story.difficulty==='Hard'? {hp:1.6, atk:1.2}: Story.difficulty==='Nightmare'? {hp:2.2, atk:1.5}: {hp:1, atk:1};
-    hp*=diff.hp; atk*=diff.atk;
-    return {name: boss?'Boss':'怪物', hp:Math.floor(hp), atk:Math.floor(atk)}
-  }
-
-  function startBattle(node){
-    BTL={speed:1,node,enemy:enemyForNode(node),t:0,done:false};
-    document.getElementById('lblSpd').textContent='1';
-    document.getElementById('lblNode').textContent = node+1;
-    const log=document.getElementById('battleLog'); log.innerHTML='';
-    const party = partyPower();
-    appendLog(`遭遇 ${BTL.enemy.name}（HP ${fmt(BTL.enemy.hp)} / ATK ${fmt(BTL.enemy.atk)}）`);
-    goto('battle');
-
-    // 簡化模擬：每 0.5s 我方與敵方互換傷害
-    let timer = setInterval(()=>{
-      if(BTL.done){ clearInterval(timer); return; }
-      const myDPS = party/20; // 粗糙期望
-      const enemyDPS = BTL.enemy.atk/3;
-      BTL.enemy.hp -= myDPS * 0.5 * BTL.speed;
-      const teamHP = (Story.heroes.length*300) - enemyDPS * 0.5 * BTL.speed * (1+node*0.05);
-      appendLog(`我方造成 ${fmt(Math.max(1,Math.floor(myDPS*0.5*BTL.speed)))}, 敵方剩 ${fmt(Math.max(0,Math.floor(BTL.enemy.hp)))}`);
-      if(BTL.enemy.hp<=0){
-        appendLog('勝利！獲得金幣與素材。');
-        Story.gold += 200 + node*20; Story.bestNode=Math.max(Story.bestNode,node); saveSlot(currentSlot, Story);
-        document.getElementById('btnBattleNext').classList.remove('hidden'); BTL.done=true; syncTown();
-      }
-      if(teamHP<=0){ appendLog('敗北… 返回上一節點'); Story.bestNode=Math.max(0,Story.bestNode-1); saveSlot(currentSlot, Story); document.getElementById('btnBattleNext').classList.remove('hidden'); BTL.done=true; }
-    }, 500);
-  }
-  function appendLog(msg){ const d=document.getElementById('battleLog'); const p=document.createElement('div'); p.textContent=`[${new Date().toLocaleTimeString()}] ${msg}`; d.prepend(p); while(d.children.length>80) d.lastChild.remove(); }
-  document.getElementById('btnBattleSpd').onclick=()=>{ BTL.speed = BTL.speed>= (Story.speedMax||2) ? 1 : BTL.speed+0.5; document.getElementById('lblSpd').textContent=BTL.speed; };
-  document.getElementById('btnRetreat').onclick=()=>{ document.getElementById('btnBattleNext').classList.remove('hidden'); appendLog('撤退，返回地圖'); BTL.done=true; };
-  document.getElementById('btnBattleNext').onclick=()=>{ document.getElementById('btnBattleNext').classList.add('hidden'); goto('map'); renderMap(); };
-
-  // ========= 無盡模式（沿用 v0.2 核心，但簡化掛載） =========
-  // 直接動態注入一個迷你掛機場景（保留你之前的設計理念）
-  let Endless = null;
-  function mountEndless(){
-    const root=document.getElementById('endlessMount');
-    root.innerHTML = `<div class="row"><button id=edStart class=btn-acc>▶ 開始/暫停</button><button id=edNext>⏭ 下一關</button><button id=edFast>⏩ ×<span id=edSpd>1</span></button></div>
-      <div class=panel id=edLog style="margin-top:8px;max-height:240px;overflow:auto"></div>`;
-    Endless = {stage:1,gold:0,spd:1,hp:200,max:200,running:true};
-    const log=(m)=>{ const d=document.getElementById('edLog'); const p=document.createElement('div'); p.textContent=m; d.prepend(p); };
-    document.getElementById('edStart').onclick=()=>{Endless.running=!Endless.running};
-    document.getElementById('edNext').onclick=()=>{Endless.stage++; Endless.hp=Endless.max=Math.floor(Endless.max*1.17)};
-    document.getElementById('edFast').onclick=()=>{Endless.spd=Endless.spd>=2?1:Endless.spd+1; document.getElementById('edSpd').textContent=Endless.spd;};
-    let prev=performance.now();
-    function loop(now){ const dt=(now-prev)/1000; prev=now; if(Endless?.running){ Endless.hp -= 20*dt*Endless.spd; if(Endless.hp<=0){Endless.gold+=10*Endless.stage; Endless.stage++; Endless.max=Math.floor(Endless.max*1.17); Endless.hp=Endless.max; log(`→ Stage ${Endless.stage}`);} }
-      requestAnimationFrame(loop); }
-    requestAnimationFrame(loop);
-  }
-
-  // ========= 主選單事件 =========
-  document.getElementById('btnStory').onclick=()=>{ renderSlots(); goto('slots'); };
-  document.getElementById('btnEndless').onclick=()=>{ goto('endless'); mountEndless(); };
-  document.getElementById('btnBackFromEndless').onclick=()=>{ goto('menu'); };
-  document.getElementById('btnBackSlots').onclick=()=>{ goto('menu'); };
-
-  // 啟動
-  goto('menu');
-  </script>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, createContext, useContext } = React;
+        
+        // Game Context
+        const GameContext = createContext();
+        
+        const useGame = () => useContext(GameContext);
+        
+        function GameProvider({ children }) {
+            const [currentScene, setCurrentScene] = useState('menu');
+            const [saveData, setSaveData] = useState(null);
+            
+            useEffect(() => {
+                const saved = localStorage.getItem('gameState');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        setSaveData(data);
+                    } catch (e) {}
+                }
+            }, []);
+            
+            const newGame = (difficulty) => {
+                const initialHero = {
+                    id: 'hero-1',
+                    name: '珍妮佛',
+                    class: 'mage',
+                    portrait: '🧙‍♀️',
+                    level: 1,
+                    exp: 0,
+                    maxExp: 100,
+                    hp: 30,
+                    maxHp: 30,
+                    mp: 16,
+                    maxMp: 16,
+                    attack: 0,
+                    defense: 1,
+                    magic: 14,
+                    magicDefense: 3,
+                    strength: 3,
+                    intelligence: 9,
+                    agility: 5,
+                    vitality: 9,
+                    skills: [
+                        { id: 'skill-1', name: '魔彈術', type: 'normal', level: 1 },
+                        { id: 'skill-2', name: '光之束縛', type: 'skill', level: 1 }
+                    ]
+                };
+                
+                const newSave = {
+                    day: 0,
+                    location: '曙光之地',
+                    difficulty,
+                    gold: 10200,
+                    heroes: [initialHero],
+                    formation: [initialHero, null, null, null, null, null]
+                };
+                
+                setSaveData(newSave);
+                localStorage.setItem('gameState', JSON.stringify(newSave));
+                setCurrentScene('town');
+            };
+            
+            const updateFormation = (newFormation) => {
+                const updated = { ...saveData, formation: newFormation };
+                setSaveData(updated);
+                localStorage.setItem('gameState', JSON.stringify(updated));
+            };
+            
+            return (
+                <GameContext.Provider value={{ 
+                    currentScene, 
+                    setCurrentScene, 
+                    saveData, 
+                    newGame,
+                    updateFormation
+                }}>
+                    {children}
+                </GameContext.Provider>
+            );
+        }
+        
+        // Main Menu Component
+        function MainMenu() {
+            const { setCurrentScene } = useGame();
+            
+            return (
+                <div className="h-screen flex flex-col items-center justify-center">
+                    <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+                        <h1 style={{ fontSize: '3.5rem', fontWeight: 'bold', marginBottom: '1rem' }} className="text-primary">
+                            掛機吧!勇者
+                        </h1>
+                        <h2 style={{ fontSize: '2rem', fontFamily: 'monospace', letterSpacing: '0.1em' }}>
+                            No-brainer Heroes
+                        </h2>
+                    </div>
+                    
+                    <div className="flex flex-col gap-4" style={{ width: '100%', maxWidth: '28rem' }}>
+                        <button className="btn w-full" style={{ padding: '1.5rem' }} onClick={() => alert('功能開發中')}>
+                            無盡模式
+                        </button>
+                        <button className="btn w-full" style={{ padding: '1.5rem' }} onClick={() => setCurrentScene('setup')}>
+                            故事模式
+                        </button>
+                        <button className="btn w-full" style={{ padding: '1.5rem' }} onClick={() => alert('功能開發中')}>
+                            成就
+                        </button>
+                        <button className="btn w-full" style={{ padding: '1.5rem' }} onClick={() => alert('功能開發中')}>
+                            設定
+                        </button>
+                        <button className="btn w-full" style={{ padding: '1.5rem' }} onClick={() => alert('功能開發中')}>
+                            製作人員
+                        </button>
+                        <button className="btn w-full" style={{ padding: '1.5rem' }} onClick={() => window.close()}>
+                            退出
+                        </button>
+                    </div>
+                    
+                    <div style={{ position: 'fixed', bottom: '1rem', right: '1rem' }} className="text-muted">
+                        v1.0.0
+                    </div>
+                </div>
+            );
+        }
+        
+        // Game Setup Component
+        function GameSetup() {
+            const { setCurrentScene, newGame } = useGame();
+            const [difficulty, setDifficulty] = useState('normal');
+            
+            return (
+                <div className="container">
+                    <div className="mb-8">
+                        <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold' }} className="text-primary mb-2">遊戲設定</h1>
+                        <p className="text-muted">選擇你的冒險配置</p>
+                    </div>
+                    
+                    <div className="grid grid-3 mb-8">
+                        <div className="card">
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="mb-4">難度選擇</h2>
+                            <div className="flex flex-col gap-2">
+                                <button 
+                                    className={difficulty === 'normal' ? 'btn btn-primary w-full' : 'btn w-full'}
+                                    onClick={() => setDifficulty('normal')}
+                                >
+                                    普通
+                                </button>
+                                <button 
+                                    className={difficulty === 'hard' ? 'btn btn-primary w-full' : 'btn w-full'}
+                                    onClick={() => setDifficulty('hard')}
+                                >
+                                    困難
+                                </button>
+                                <button 
+                                    className={difficulty === 'nightmare' ? 'btn btn-primary w-full' : 'btn w-full'}
+                                    onClick={() => setDifficulty('nightmare')}
+                                >
+                                    惡夢
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="card">
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="mb-4">地圖選擇</h2>
+                            <div className="grid grid-2 gap-2">
+                                <div className="stat-box text-center">曙光之地</div>
+                                <div className="stat-box text-center" style={{ opacity: 0.5 }}>🔒 永劫之地</div>
+                                <div className="stat-box text-center" style={{ opacity: 0.5 }}>🔒 遺忘之地</div>
+                                <div className="stat-box text-center" style={{ opacity: 0.5 }}>🔒 勤亂之地</div>
+                            </div>
+                        </div>
+                        
+                        <div className="card">
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="mb-4">初始英雄</h2>
+                            <div className="grid grid-2 gap-2">
+                                {['🛡️ 守護', '⚔️ 戰士', '🗡️ 刺客', '👊 格鬥', '🏹 射手', '🔮 法師', '✨ 牧師'].map(hero => (
+                                    <button key={hero} className="btn" style={{ padding: '1rem' }}>
+                                        {hero}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="flex justify-center gap-4">
+                        <button className="btn" onClick={() => setCurrentScene('menu')}>返回</button>
+                        <button className="btn btn-primary" onClick={() => newGame(difficulty)}>
+                            開啟一段冒險
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Town Component
+        function Town() {
+            const { setCurrentScene, saveData } = useGame();
+            
+            if (!saveData) return null;
+            
+            const buildings = [
+                { name: '冒險', icon: '🗺️', action: () => setCurrentScene('map') },
+                { name: '英雄', icon: '👥', action: () => setCurrentScene('heroes') },
+                { name: '編組', icon: '⚔️', action: () => setCurrentScene('formation') },
+                { name: '商店', icon: '🏪', action: () => alert('功能開發中') },
+                { name: '成就', icon: '🏆', action: () => alert('功能開發中') },
+                { name: '設定', icon: '⚙️', action: () => alert('功能開發中') }
+            ];
+            
+            return (
+                <div>
+                    <div className="top-bar">
+                        <div className="container flex justify-between items-center">
+                            <div className="flex items-center gap-6">
+                                <div>第 <span className="text-primary" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{saveData.day}</span> 天</div>
+                                <div>{saveData.location}</div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span style={{ fontSize: '1.5rem' }}>💰</span>
+                                <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{saveData.gold.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="container">
+                        <div className="mb-8">
+                            <h1 style={{ fontSize: '2.5rem', fontWeight: 'bold' }} className="text-primary mb-2">城鎮</h1>
+                            <p className="text-muted">選擇你要前往的地方</p>
+                        </div>
+                        
+                        <div className="grid grid-3 mb-8">
+                            {buildings.map(building => (
+                                <div key={building.name} className="card text-center" style={{ cursor: 'pointer' }} onClick={building.action}>
+                                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>{building.icon}</div>
+                                    <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{building.name}</h3>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="flex justify-center">
+                            <button className="btn" onClick={() => setCurrentScene('menu')}>返回主選單</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Heroes Component
+        function Heroes() {
+            const { setCurrentScene, saveData } = useGame();
+            const [selectedHero, setSelectedHero] = useState(0);
+            
+            if (!saveData) return null;
+            
+            const hero = saveData.heroes[selectedHero];
+            
+            return (
+                <div>
+                    <div className="top-bar">
+                        <div className="container flex items-center gap-4">
+                            <button className="btn" onClick={() => setCurrentScene('town')}>← 返回</button>
+                            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="text-primary">英雄</h1>
+                        </div>
+                    </div>
+                    
+                    <div className="container">
+                        <div className="grid grid-3 gap-6">
+                            <div className="card">
+                                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold' }} className="mb-4">英雄列表</h2>
+                                <div className="flex flex-col gap-2">
+                                    {saveData.heroes.map((h, idx) => (
+                                        <button 
+                                            key={h.id}
+                                            className={selectedHero === idx ? 'btn btn-primary w-full' : 'btn w-full'}
+                                            onClick={() => setSelectedHero(idx)}
+                                        >
+                                            <span style={{ fontSize: '1.5rem' }}>{h.portrait}</span> {h.name} Lv.{h.level}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <div className="card" style={{ gridColumn: 'span 2' }}>
+                                <div className="flex items-start gap-6 mb-6">
+                                    <div className="hero-portrait">{hero.portrait}</div>
+                                    <div style={{ flex: 1 }}>
+                                        <h2 style={{ fontSize: '2rem', fontWeight: 'bold' }} className="mb-2">{hero.name}</h2>
+                                        <div className="text-muted mb-2">職業: {hero.class} · 等級: {hero.level}</div>
+                                        <div>
+                                            <div className="progress-bar">
+                                                <div className="progress-fill" style={{ width: `${(hero.exp / hero.maxExp) * 100}%` }}></div>
+                                            </div>
+                                            <div className="text-muted" style={{ fontSize: '0.875rem', marginTop: '0.25rem' }}>
+                                                經驗: {hero.exp}/{hero.maxExp}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="grid grid-3 gap-4 mb-6">
+                                    <div className="stat-box">
+                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>生命</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{hero.hp}/{hero.maxHp}</div>
+                                    </div>
+                                    <div className="stat-box">
+                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>行動</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{hero.mp}/{hero.maxMp}</div>
+                                    </div>
+                                    <div className="stat-box">
+                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>攻擊</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{hero.attack}</div>
+                                    </div>
+                                    <div className="stat-box">
+                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>防禦</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{hero.defense}</div>
+                                    </div>
+                                    <div className="stat-box">
+                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>魔法</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{hero.magic}</div>
+                                    </div>
+                                    <div className="stat-box">
+                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>魔抗</div>
+                                        <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{hero.magicDefense}</div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold' }} className="mb-4">英雄技能</h3>
+                                    <div className="flex flex-col gap-4">
+                                        {hero.skills.map(skill => (
+                                            <div key={skill.id} className="stat-box">
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <div>
+                                                        <span style={{ 
+                                                            padding: '0.25rem 0.5rem', 
+                                                            borderRadius: '0.25rem',
+                                                            background: 'oklch(0.65 0.15 200 / 0.2)',
+                                                            fontSize: '0.75rem',
+                                                            marginRight: '0.5rem'
+                                                        }}>
+                                                            {skill.type === 'normal' ? '普通攻擊' : '技能攻擊'}
+                                                        </span>
+                                                        <span style={{ fontWeight: 'bold' }}>{skill.name}</span>
+                                                    </div>
+                                                    <span className="text-muted" style={{ fontSize: '0.875rem' }}>Lv.{skill.level}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Formation Component
+        function Formation() {
+            const { setCurrentScene, saveData, updateFormation } = useGame();
+            const [selectedPosition, setSelectedPosition] = useState(null);
+            
+            if (!saveData) return null;
+            
+            const formation = saveData.formation;
+            const availableHeroes = saveData.heroes.filter(h => !formation.some(f => f?.id === h.id));
+            
+            const handleAddHero = (hero) => {
+                if (selectedPosition === null) return;
+                const newFormation = [...formation];
+                newFormation[selectedPosition] = hero;
+                updateFormation(newFormation);
+                setSelectedPosition(null);
+            };
+            
+            const handleRemoveHero = (position) => {
+                const newFormation = [...formation];
+                newFormation[position] = null;
+                updateFormation(newFormation);
+            };
+            
+            const deployedCount = formation.filter(h => h !== null).length;
+            
+            return (
+                <div>
+                    <div className="top-bar">
+                        <div className="container flex items-center gap-4">
+                            <button className="btn" onClick={() => setCurrentScene('town')}>← 返回</button>
+                            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="text-primary">編組</h1>
+                        </div>
+                    </div>
+                    
+                    <div className="container">
+                        <div className="grid grid-2 gap-6">
+                            <div className="card">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>隊伍1</h2>
+                                    <div className="text-muted">上陣人數: {deployedCount}/5</div>
+                                </div>
+                                
+                                <div className="grid grid-2 gap-4 mb-4">
+                                    {[3, 0, 4, 1, 5, 2].map((pos, idx) => {
+                                        const hero = formation[pos];
+                                        return (
+                                            <div 
+                                                key={pos}
+                                                className={`position-slot ${hero ? 'filled' : ''} ${selectedPosition === pos ? 'selected' : ''}`}
+                                                onClick={() => setSelectedPosition(pos)}
+                                                style={selectedPosition === pos ? { borderColor: 'oklch(0.65 0.15 200)', background: 'oklch(0.65 0.15 200 / 0.1)' } : {}}
+                                            >
+                                                <div className="position-label">{pos + 1}</div>
+                                                {hero ? (
+                                                    <div className="text-center">
+                                                        <div style={{ fontSize: '2.5rem' }}>{hero.portrait}</div>
+                                                        <div style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>{hero.name}</div>
+                                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>Lv.{hero.level}</div>
+                                                        <button 
+                                                            onClick={(e) => { e.stopPropagation(); handleRemoveHero(pos); }}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '0.5rem',
+                                                                right: '0.5rem',
+                                                                width: '1.5rem',
+                                                                height: '1.5rem',
+                                                                borderRadius: '50%',
+                                                                background: 'oklch(0.6 0.2 20)',
+                                                                border: 'none',
+                                                                color: 'white',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-muted">空位</div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                
+                                <div className="flex gap-2 text-muted mb-4" style={{ fontSize: '0.875rem' }}>
+                                    <span>← 後排</span>
+                                    <span style={{ flex: 1, textAlign: 'center' }}>中排</span>
+                                    <span>前排 →</span>
+                                </div>
+                                
+                                <div className="flex gap-2">
+                                    <button className="btn" style={{ flex: 1 }}>保存</button>
+                                    <button className="btn" style={{ flex: 1 }}>更換</button>
+                                    <button className="btn btn-primary" style={{ flex: 1 }} onClick={() => setCurrentScene('battle')}>戰鬥</button>
+                                </div>
+                            </div>
+                            
+                            <div className="card">
+                                <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold' }} className="mb-4">英雄</h2>
+                                {selectedPosition !== null ? (
+                                    <div className="flex flex-col gap-2">
+                                        <p className="text-muted mb-2" style={{ fontSize: '0.875rem' }}>
+                                            選擇要放置在位置 {selectedPosition + 1} 的英雄
+                                        </p>
+                                        {availableHeroes.map(hero => (
+                                            <button 
+                                                key={hero.id}
+                                                className="btn w-full"
+                                                style={{ padding: '1rem', textAlign: 'left' }}
+                                                onClick={() => handleAddHero(hero)}
+                                            >
+                                                <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>{hero.portrait}</span>
+                                                {hero.name} · Lv.{hero.level}
+                                            </button>
+                                        ))}
+                                        {availableHeroes.length === 0 && (
+                                            <div className="text-center text-muted" style={{ padding: '2rem' }}>
+                                                沒有可用的英雄
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="text-center text-muted" style={{ padding: '3rem' }}>
+                                        點擊左側位置來選擇英雄
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Map Component
+        function MapExplore() {
+            const { setCurrentScene, saveData } = useGame();
+            
+            if (!saveData) return null;
+            
+            return (
+                <div>
+                    <div className="top-bar">
+                        <div className="container flex justify-between items-center">
+                            <div className="flex items-center gap-4">
+                                <button className="btn" onClick={() => setCurrentScene('town')}>← 返回</button>
+                                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="text-primary">地圖探索</h1>
+                            </div>
+                            <div className="text-muted">{saveData.location} · 進度: 0%</div>
+                        </div>
+                    </div>
+                    
+                    <div className="container">
+                        <div className="card">
+                            <div style={{ textAlign: 'center', padding: '4rem' }}>
+                                <div style={{ fontSize: '4rem', marginBottom: '2rem' }}>🗺️</div>
+                                <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold' }} className="mb-4">地圖探索</h2>
+                                <p className="text-muted mb-8">選擇節點開始冒險</p>
+                                <button className="btn btn-primary" onClick={() => setCurrentScene('battle')}>
+                                    開始戰鬥
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Battle Component
+        function Battle() {
+            const { setCurrentScene, saveData } = useGame();
+            const [gameSpeed, setGameSpeed] = useState(1.0);
+            
+            if (!saveData) return null;
+            
+            const heroes = saveData.formation.filter(h => h !== null);
+            const speeds = [1.0, 1.5, 2.0, 2.5, 3.0];
+            
+            return (
+                <div>
+                    <div className="top-bar">
+                        <div className="container flex justify-between items-center">
+                            <div className="flex items-center gap-4">
+                                <button className="btn" onClick={() => setCurrentScene('map')}>⏸ 暫停</button>
+                                <div>{saveData.location}</div>
+                            </div>
+                            <div className="flex gap-2">
+                                {speeds.map(speed => (
+                                    <button 
+                                        key={speed}
+                                        className={gameSpeed === speed ? 'btn btn-primary' : 'btn'}
+                                        onClick={() => setGameSpeed(speed)}
+                                        style={{ minWidth: '4rem' }}
+                                    >
+                                        {speed}x
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+                        <div style={{ width: '100%', maxWidth: '1200px' }}>
+                            <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+                                <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>👹</div>
+                                <div style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>哥布林</div>
+                                <div className="progress-bar" style={{ width: '6rem', margin: '0.5rem auto' }}>
+                                    <div className="progress-fill" style={{ width: '80%', background: 'oklch(0.7 0.18 40)' }}></div>
+                                </div>
+                            </div>
+                            
+                            <div className="flex justify-center gap-8" style={{ flexWrap: 'wrap' }}>
+                                {heroes.map(hero => (
+                                    <div key={hero.id} className="text-center">
+                                        <div style={{ fontSize: '3.5rem', marginBottom: '0.5rem' }}>{hero.portrait}</div>
+                                        <div className="progress-bar" style={{ width: '6rem', margin: '0 auto 0.25rem' }}>
+                                            <div className="progress-fill" style={{ width: `${(hero.hp / hero.maxHp) * 100}%` }}></div>
+                                        </div>
+                                        <div style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>{hero.name}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="top-bar" style={{ borderTop: '2px solid oklch(0.3 0.02 220)', borderBottom: 'none' }}>
+                        <div className="container flex gap-4" style={{ overflowX: 'auto' }}>
+                            {heroes.map(hero => (
+                                <div key={hero.id} className="stat-box" style={{ minWidth: '12rem' }}>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span style={{ fontSize: '1.5rem' }}>{hero.portrait}</span>
+                                        <div style={{ flex: 1 }}>
+                                            <div style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>{hero.name}</div>
+                                            <div className="text-muted" style={{ fontSize: '0.75rem' }}>Lv.{hero.level}</div>
+                                        </div>
+                                    </div>
+                                    <div className="progress-bar mb-1">
+                                        <div className="progress-fill" style={{ width: `${(hero.hp / hero.maxHp) * 100}%` }}></div>
+                                    </div>
+                                    <div className="text-muted" style={{ fontSize: '0.75rem' }}>HP: {hero.hp}/{hero.maxHp}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+        
+        // Main App Component
+        function App() {
+            const { currentScene } = useGame();
+            
+            const scenes = {
+                menu: <MainMenu />,
+                setup: <GameSetup />,
+                town: <Town />,
+                heroes: <Heroes />,
+                formation: <Formation />,
+                map: <MapExplore />,
+                battle: <Battle />
+            };
+            
+            return scenes[currentScene] || <MainMenu />;
+        }
+        
+        // Render App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <GameProvider>
+                <App />
+            </GameProvider>
+        );
+    </script>
 </body>
 </html>
